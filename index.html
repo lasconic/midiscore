@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <link type="text/css" rel="stylesheet" media="all" href="css/smp.css" />  
+  </head>
+<script type="text/javascript"> 
+$(document).ready(function() {
+  $('#search').click(function(){
+      $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday&callback=?&text=' + $('#artist').val(), function(data) {
+        $.each(data, function(index, score){
+            $('#results').append('<ul><a href="score.html?score='+score.id+'&secret='+score.secret+'"">' + score.title + '</a></ul>');
+        });;
+      });
+  });
+});
+</script>
+  <body class="ms">
+  <div id="main" role="main">
+      <div id="splash">
+        <h1>Want to practise some music?</h1>
+          <div class="stage" id="first">
+            <label for="artist" id="artist_label">Enter a keyword</label>
+            <input tabindex="1" id="artist" autocomplete="off" name="q">
+            <button id="search" class="button stage_button" type="submit">Proceed</button>
+          </div>
+      </div>
+      <div id="suggestions">
+        Suggestions: <a href="score.html?score=26467&secret=c0496270b2">Angry birds fuga con barok style</a>
+      </div>
+      <div id="results">
+        <ul></ul>
+      </div>
+    </div>
+  </body>
+</html>

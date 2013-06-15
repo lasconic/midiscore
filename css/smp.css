@@ -1,0 +1,136 @@
+.ms {
+font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,sans-serif;
+font-size: 11px;
+line-height: 1.5;
+color: #454545;
+}
+
+#smp-control{
+  position: fixed; 
+  bottom: 0px;
+  background-color:#D1DAEF;
+  border:1px dotted #F0EB9E;
+  width:1000px;
+}
+
+#smp-video{
+  position:fixed;
+  top:0px;
+  left:814px;
+}
+
+#smp-pages {
+width: 650px;
+margin: -10px;
+}
+
+div.page {
+  position:relative;
+
+}
+img.pageimg{
+  border: 1px solid #F0EB9E;
+  margin:5px;  
+}
+
+div.measure{
+  position: absolute;
+  background-color: #FF0000;
+  /* for IE */
+  filter:alpha(opacity=0);
+  /* CSS3 standard */
+  opacity:0;
+  /*display:none;*/
+  margin:5px;
+}
+
+div.measure-visible{
+  position: absolute;
+  background-color: #FF0000;
+  /* for IE */
+  filter:alpha(opacity=20);
+  /* CSS3 standard */
+  opacity:0.20;
+  /*display:none;*/
+}
+
+#smp-control-replay {
+  background:url("../images/start.png") no-repeat scroll left center transparent;
+  font-size:24px;
+  margin-left:20px;
+  padding-left:19px;
+  text-decoration:none;
+  display:none;
+}
+#smp-control-play {
+  font-size:24px;
+  margin-left:20px;
+  padding-left:28px;
+  text-decoration:none;
+  display:none;
+}
+.smp-control-play-mode {
+  background:url("../images/play.png") no-repeat scroll left center transparent;
+}
+.smp-control-pauze-mode {
+  background:url("../images/pauze.png") no-repeat scroll left center transparent;
+}
+#smp-control-measure {
+  padding-left:220px;
+  font-size:17px;
+}
+#smp-control-page {
+  padding-left:30px;
+  font-size:17px;
+}
+
+#smp-control input {
+  background-color:#EFF4FF;
+  border:0 none;
+  padding:0 0 1px;
+  text-align:center;
+  width:20px;
+}
+#smp-control-video-toggle {
+  margin-left:200px;
+  padding-left:40px;
+  font-size:24px;
+  text-decoration:none;
+}
+
+#smp-control-score-toggle {
+  margin-left:20px;
+  padding-left:40px;
+  font-size:24px;
+  text-decoration:none;
+}
+
+.smp-control-video-on {
+  background:url("../images/video-on.png") no-repeat scroll left center transparent;
+}
+.smp-control-video-off {
+  background:url("../images/video-off.png") no-repeat scroll left center transparent;
+}
+
+.smp-control-score-on {
+  background:url("../images/score-on.png") no-repeat scroll left center transparent;
+}
+.smp-control-score-off {
+  background:url("../images/score-off.png") no-repeat scroll left center transparent;
+}
+
+#smp-control-fullscreen {
+  display:none;
+}
+
+#smp-tempo-list {
+  display:none;
+}
+
+#smp-channel-list {
+  display:none;
+}
+
+.smp-video-element {
+  margin-bottom: 7px;
+}

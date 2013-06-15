@@ -1,0 +1,60 @@
+<html>
+  <head>
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>  
+<script type="text/javascript" src="js/jquery.mpager.js"></script> 
+<script type="text/javascript" src="js/smp.js"></script>
+<script type="text/javascript" src="js/swfobject/swfobject.js"></script>
+
+<script type="text/javascript" src="js/purl.js"></script>
+
+ <!-- midi.js package -->
+ <script src="./js/MIDI/AudioDetect.js" type="text/javascript"></script>
+ <script src="./js/MIDI/LoadPlugin.js" type="text/javascript"></script>
+ <script src="./js/MIDI/Plugin.js" type="text/javascript"></script>
+ <script src="./js/MIDI/Player.js" type="text/javascript"></script>
+ <script src="./js/Window/DOMLoader.XMLHttp.js" type="text/javascript"></script>
+ <script src="./js/Window/DOMLoader.script.js" type="text/javascript"></script>
+  <!-- jasmid package -->
+ <script src="./inc/jasmid/stream.js"></script>
+ <script src="./inc/jasmid/midifile.js"></script>
+ <script src="./inc/jasmid/replayer.js"></script>
+ <!-- extras -->
+ <script src="./inc/Base64.js" type="text/javascript"></script>
+ <script src="./inc/base64binary.js" type="text/javascript"></script>
+
+ 
+    <link type="text/css" rel="stylesheet" media="all" href="css/smp.css" />  
+  </head>
+<script type="text/javascript"> 
+$(document).ready(function() {
+  
+});
+</script>
+  <body class="ms">
+    <div id="smp-pages" class="smp-pages">
+    </div>   		     
+    <div id="smp-control">              
+      <a id="smp-control-replay" href="#">&nbsp;</a>            
+      <a id="smp-control-play" class="smp-control-play-mode" href="#">&nbsp;</a>                           
+      <span id="smp-control-measure">            Measure 
+        <a id="smp-control-measure-prev" href="#">&lt;</a>              
+        <input id="smp-control-measure-goto" value="1" size="3" />/<span id="smp-measure-count">12</span>           
+        <a id="smp-control-measure-next" href="#">&gt;</a>            
+      </span>                           
+      <span id="smp-control-page">            Page 
+        <a id="smp-control-page-prev" href="#">&lt;</a>              
+        <input id="smp-control-page-goto" value="1" size="3" />/<span id="smp-page-count">12</span>                     
+        <a id="smp-control-page-next" href="#">&gt;</a>            
+      </span>                                 
+      <a id="smp-control-fullscreen" href="#">fullscreen</a>
+      <select id="smp-tempo-list">
+        <option data-tempo="2">half</option>
+        <option selected data-tempo="1">original</option>
+        <option data-tempo="0.5">double</option>
+      </select>
+      <select id="smp-channel-list" multiple>
+      </select>           
+    </div>  
+    </div>
+  </body>
+</html>
