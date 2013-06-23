@@ -27,7 +27,7 @@ var parts;
 
 $(document).ready(function() {
 	isMobile = (navigator.platform == 'iPad' || navigator.platform == 'iPhone' || navigator.platform == 'iPod');
-	
+		
 	$('#smp-pages').width($(document).width() - 250);
 	$('#smp-control').width($(document).width() - 250);
 
@@ -39,7 +39,7 @@ $(document).ready(function() {
 		scoreId = tmpScoreId;
 		scoreSecret = tmpScoreSecret;
 	}
-	
+	MIDI.loader = new widgets.Loader;
 	$.getJSON('http://api.musescore.com/services/rest/score/' + scoreId + ".jsonp?secret=" + scoreSecret + "&oauth_consumer_key="+ consumerKey +"&callback=?", function(data) {
 		var pages = data.metadata.pages;
 		parts = data.metadata.parts.length;
@@ -48,20 +48,65 @@ $(document).ready(function() {
 		$("#smp-page-count").text(pages);
 		$("#smp-measure-count").text(data.metadata.measures);
 		mpager = $("#smp-pages").mpager({
-		api		: true,
-		pages 	: pages,
-		scoreId : scoreId,
-		scoreSecret : scoreSecret,
-		apiServer : "http://musescore.com",
-		staticBucket : "static.musescore.com",
-		measureClickCallback : measureClick,
-		measureChangeCallback: measureChange,
-		pageWidth: pageWidth,
-		defaultMeasure: -1,
-		bottomPadding: 10,
-		consumerKey: consumerKey,
-		scrollToMeasure:true
-	}); 
+			api		: true,
+			pages 	: pages,
+			scoreId : scoreId,
+			scoreSecret : scoreSecret,
+			apiServer : "http://musescore.com",
+			staticBucket : "static.musescore.com",
+			measureClickCallback : measureClick,
+			measureChangeCallback: measureChange,
+			pageWidth: pageWidth,
+			defaultMeasure: -1,
+			bottomPadding: 10,
+			consumerKey: consumerKey,
+			scrollToMeasure:true
+		});
+		var instruments = new Array(); 
+		$.each(data.metadata.parts, function(index, part) {
+			var program = parseInt(part.part.program);
+			if (program == 128)
+				program = 118;
+			if ($.inArray(program, instruments) == -1)
+				instruments.push(program);
+			}
+		);
+		console.log(instruments);
+		MIDI.loadPlugin({
+			soundfontUrl: "./soundfont/",
+			instruments: instruments,
+			callback: function() {
+				player = MIDI.Player;
+				player.timeWarp = 1; // speed the song is played back
+				player.loadFile('http://static.musescore.com/' + scoreId + '/'+ scoreSecret +'/score.mid', MIDIPlayerReady);
+				MIDI.loader.stop();
+			}
+		});
+
+		$('#smp-tempo-list').change(function(){
+			console.log($(this).val());
+			var playing = player.playing;
+			var ct = player.currentTime;
+			var tw = player.timeWarp;
+			var tempo = $(this).find(":selected").attr("data-tempo");
+			var ntw = parseFloat(tempo);
+			if(ntw != tw) {
+				$('#smp-control-play').addClass('smp-control-play-mode');
+				$('#smp-control-play').removeClass('smp-control-pauze-mode');
+				player.stop();
+				player.timeWarp = ntw; // speed the song is played back
+				player.loadFile('http://static.musescore.com/' + scoreId + '/'+ scoreSecret +'/score.mid?nocache', function() {
+					MIDIPlayerReady();
+					if(playing) {
+						player.currentTime = (ct * ntw) / tw;
+						player.start();
+						$('#smp-control-play').removeClass('smp-control-play-mode');
+						$('#smp-control-play').addClass('smp-control-pauze-mode');
+					}
+				});
+				
+			}
+		}) ; 
 	});
 
 	var bottomPadding = $("#smp-control").height();
@@ -155,26 +200,6 @@ $.getJSON('http://api.musescore.com/services/rest/score/' + scoreId + "/time.jso
 		 eventsSorted[events[i].elid].push(events[i].position);
 		}
 	});
-
-MIDI.loadPlugin({
-		soundfontUrl: "./soundfont/",
-		instrument: "acoustic_grand_piano",
-		callback: function() {
-			player = MIDI.Player;
-			player.timeWarp = 1; // speed the song is played back
-			player.loadFile('http://static.musescore.com/' + scoreId + '/'+ scoreSecret +'/score.mid', MIDIPlayerReady);
-		}
-	});
-
-$('#smp-tempo-list').change(function(){
-	console.log($(this).val());
-	var tempo = $(this).find(":selected").attr("data-tempo");
-	$('#smp-control-play').addClass('smp-control-play-mode');
-	$('#smp-control-play').removeClass('smp-control-pauze-mode');
-	player.timeWarp = parseFloat(tempo); // speed the song is played back
-	player.loadFile('http://static.musescore.com/' + scoreId + '/'+ scoreSecret +'/score.mid?nocache', MIDIPlayerReady);
-}) ;
-
 });
 
 function MIDIPlayerReady() {
@@ -184,20 +209,20 @@ function MIDIPlayerReady() {
 	if(parts > 1) {
 		$('#smp-channel-list').show();
 		$('#smp-channel-list').html('');
-		$.each(MIDI.channels, function (index, value) {
-	    $('#smp-channel-list').append($('<option>', { 
-	        value: index,
-	        selected: true,
-	        text : "Channel" + (parseInt(index)+1) 
-	    	}));
-		});
+		for (var index = 0; index < parts; index++) {
+		    $('#smp-channel-list').append($('<option>', { 
+		        value: index,
+		        selected: true,
+		        text : "Channel" + (parseInt(index)+1) 
+		    	}));
+		}
 		$('#smp-channel-list').change(function(){
 			player.pause();
 			$(this).find('option').each(function(index, value) {
-	    		MIDI.channels[index].mute = true;
-	    	});
-	      	$(this).find(":selected").each(function(index, value) {
-	    		MIDI.channels[index].mute = false;
+	    		if(this.selected)
+	    			MIDI.channels[index].mute = false;
+	    		else
+	    			MIDI.channels[index].mute = true;
 	    	});
 	    	player.resume();
 	    });

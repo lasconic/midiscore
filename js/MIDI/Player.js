@@ -235,6 +235,12 @@ var startAudio = function (currentTime, fromCache) {
 					interval: scheduleTracking(channel, note, queuedTime, offset, 128)
 				});
 				break;
+			case 'programChange':
+				eventQueue.push({
+					event: event,
+					source: MIDI.programChange(channel, event.programNumber),
+				});
+				break;
 			default:
 				break;
 		}

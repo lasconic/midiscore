@@ -7,7 +7,8 @@
 $(document).ready(function() {
   $('#search').click(function(){
       $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday&callback=?&text=' + $('#artist').val(), function(data) {
-        $.each(data, function(index, score){
+          $('#results').html('');
+          $.each(data, function(index, score){
             $('#results').append('<ul><a href="score.html?score='+score.id+'&secret='+score.secret+'"">' + score.title + '</a></ul>');
         });;
       });
