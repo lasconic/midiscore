@@ -205,6 +205,7 @@ $.getJSON('http://api.musescore.com/services/rest/score/' + scoreId + "/time.jso
 function MIDIPlayerReady() {
 	console.log('MIDI player ready');
 	$('#smp-control-play').show();
+	$('#smp-control-replay').show();
 	$('#smp-tempo-list').show();
 	if(parts > 1) {
 		$('#smp-channel-list').show();

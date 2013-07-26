@@ -1,36 +1,49 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <link type="text/css" rel="stylesheet" media="all" href="css/smp.css" />  
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
   </head>
 <script type="text/javascript"> 
 $(document).ready(function() {
-  $('#search').click(function(){
-      $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday&callback=?&text=' + $('#artist').val(), function(data) {
+  $('#search').click(search);
+  $('#search-query').keypress(function(e) {
+    if(e.which == 13) {
+        search();
+    }
+  });
+  function search(){
+      $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday&callback=?&text=' + $('#search-query').val(), function(data) {
           $('#results').html('');
           $.each(data, function(index, score){
-            $('#results').append('<ul><a href="score.html?score='+score.id+'&secret='+score.secret+'"">' + score.title + '</a></ul>');
+            $('#results').append('<div class="span2"><a href="score.html?score='+score.id+'&secret='+score.secret+'""><img src="http://static.musescore.com/'+score.id+'/'+score.secret+'/thumb.png?nocache='+score.dates.lastupdate+'"></a><a href="score.html?score='+score.id+'&secret='+score.secret+'"">' + score.title + '</a></div>');
         });;
       });
-  });
+  }
 });
 </script>
   <body class="ms">
-  <div id="main" role="main">
-      <div id="splash">
-        <h1>Want to practise some music?</h1>
-          <div class="stage" id="first">
-            <label for="artist" id="artist_label">Enter a keyword</label>
-            <input tabindex="1" id="artist" autocomplete="off" name="q">
-            <button id="search" class="button stage_button" type="submit">Proceed</button>
-          </div>
-      </div>
-      <div id="suggestions">
-        Suggestions: <a href="score.html?score=26467&secret=c0496270b2">Angry birds fuga con barok style</a>
-      </div>
-      <div id="results">
-        <ul></ul>
-      </div>
+    <div class="container">
+        <div class="splash">
+          <h2 class="form-signin-heading">Let's practise?</h2>
+            <div class="input-append">
+              <label for="search-query" id="search-query-label">Enter a keyword</label>
+              <input type="text" id="search-query" placeholder="Search">
+              <button class='btn add-on' id="search">
+                  <i class="icon-search"></i>
+              </button>
+            </div>
+            <div id="suggestions">
+              Suggestions: <a href="score.html?score=26467&secret=c0496270b2">Angry birds fuga con barok style</a>
+            </div>
+        </div>
+        <div id="results" class="row-fluid">
+          <ul></ul>
+        </div>
     </div>
+    <script src="js/bootstrap.min.js"></script>
   </body>
 </html>
