@@ -16,7 +16,7 @@ $(document).ready(function() {
     }
   });
   function search(){
-      $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday&callback=?&text=' + $('#search-query').val(), function(data) {
+      $.getJSON('http://api.musescore.com/services/rest/score.jsonp?&oauth_consumer_key=musichackday2014&callback=?&text=' + $('#search-query').val(), function(data) {
           $('#results').html('');
           $.each(data, function(index, score){
             $('#results').append('<div class="span2"><a href="score.html?score='+score.id+'&secret='+score.secret+'""><img src="http://static.musescore.com/'+score.id+'/'+score.secret+'/thumb.png?nocache='+score.dates.lastupdate+'"></a><a href="score.html?score='+score.id+'&secret='+score.secret+'"">' + score.title + '</a></div>');

@@ -7,7 +7,7 @@ var player;
 var scoreId = 82782;
 var scoreSecret = "7cf5724682"
 
-consumerKey = 'musichackday'
+consumerKey = 'musichackday2014'
 var events;
 var eventsSorted;
 
