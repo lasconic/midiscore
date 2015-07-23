@@ -36,7 +36,7 @@
     this.NORMAL_VIEW = 0;
     this.SLIDESHOW_VIEW = 1;
     this.cMode = this.SLIDESHOW_VIEW;
-		this._init();
+    this._init();
 	};
 	
 	$.fn.mpager.defaults = {
@@ -185,15 +185,16 @@
           	element.addClass("measure-visible");
           	var pageBefore = this.currentPage();
             this.cMeasure = id;
-            if(this.cMode == this.SLIDESHOW_VIEW) {
-            	var currentPage = parseInt(this.elements[this.cMeasure].page);
-            	if(pageBefore != currentPage) {
-			        $('#page-'+pageBefore).hide();
-			        $('#page-'+currentPage).show();
-			        this.cPage = currentPage;
-			        if(this.pageChangeCallback)
-			        	this.pageChangeCallback(this.cPage);
-            	}
+            
+            var currentPage = parseInt(this.elements[this.cMeasure].page);
+            if(pageBefore != currentPage) {
+			    if(this.cMode == this.SLIDESHOW_VIEW) {
+                    $('#page-'+pageBefore).hide();
+                    $('#page-'+currentPage).show();
+                }
+			    this.cPage = currentPage;
+			    if(this.pageChangeCallback)
+			    	this.pageChangeCallback(this.cPage);
             }
 			if(this.scrollToMeasure) {
 	            // Scroll to view the measure // do both in one
@@ -229,10 +230,11 @@
             var currentPage = this.currentPage();
             this.cMode = mode;
             if(mode == this.SLIDESHOW_VIEW) {
-                  $('.mpager-page').not('#page-'+currentPage).hide();
+                $('.mpager-page').not('#page-'+currentPage).hide();
             } else if (mode == this.NORMAL_VIEW) {
-                  $('.mpager-page').show();
-                  this.processHighlightMeasure($('#measure-' + this.cMeasure), this.cMeasure);
+                $('.mpager-page').show();
+                if (this.elements)
+                    this.processHighlightMeasure($('#measure-' + this.cMeasure), this.cMeasure);
             }
         },
         _isScrolledIntoViewV:function(elem){
