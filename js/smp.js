@@ -24,6 +24,8 @@ var mmToPixel = (827/210);
 var isMobile;
 
 var parts;
+var scoreTotalTime;
+var initialTimeWarp;
 
 $(document).ready(function() {
 	isMobile = (navigator.platform == 'iPad' || navigator.platform == 'iPhone' || navigator.platform == 'iPod');
@@ -33,16 +35,17 @@ $(document).ready(function() {
 
 	maxPageWidth = $('#smp-pages').width();
 	var mainUrl = $.url();
-	tmpScoreId =mainUrl.param('score');
+	tmpScoreId = mainUrl.param('score');
 	tmpScoreSecret = mainUrl.param('secret');
 	if (tmpScoreId && tmpScoreSecret) {
 		scoreId = tmpScoreId;
 		scoreSecret = tmpScoreSecret;
 	}
-	MIDI.loader = new widgets.Loader;
+	MIDI.loader = new sketch.ui.Timer;
 	$.getJSON('http://api.musescore.com/services/rest/score/' + scoreId + ".jsonp?secret=" + scoreSecret + "&oauth_consumer_key="+ consumerKey +"&callback=?", function(data) {
 		var pages = data.metadata.pages;
 		parts = data.metadata.parts.length;
+		scoreTotalTime = data.metadata.duration
 		var dimensions = data.metadata.dimensions;
 		var pageWidth = parseInt(dimensions.split('x')[0]) * mmToPixel;
 		$("#smp-page-count").text(pages);
@@ -74,12 +77,13 @@ $(document).ready(function() {
 		console.log(instruments);
 		MIDI.loadPlugin({
 			soundfontUrl: "./soundfont/",
-			instruments: instruments,
-			callback: function() {
+			//instruments: instruments,
+			onsuccess: function() {
 				player = MIDI.Player;
+				player.BPM = undefined
 				player.timeWarp = 1; // speed the song is played back
 				player.loadFile('http://static.musescore.com/' + scoreId + '/'+ scoreSecret +'/score.mid', MIDIPlayerReady);
-				MIDI.loader.stop();
+				MIDI.Player.stop();
 			}
 		});
 
@@ -162,11 +166,16 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-
-  
 	
 	$('#smp-control-replay').click(function() {
-    	return false;
+		var playing = player.playing
+		if (playing)
+			MIDI.Player.pause();
+		MIDI.Player.currentTime = 0;
+		mpager.goTo(0)
+		if (playing)
+			MIDI.Player.resume();
+ 		return false;
 	});
 	
 	$('#smp-control-play').click(function() {
@@ -207,6 +216,13 @@ function MIDIPlayerReady() {
 	$('#smp-control-play').show();
 	$('#smp-control-replay').show();
 	$('#smp-tempo-list').show();
+	console.log("duration " + scoreTotalTime)
+    console.log("mididuration " + player.endTime)
+    var t = (player.endTime / 1000) + 2;
+    console.log("t "  + t)
+    initialTimeWarp = t / scoreTotalTime;
+    player.timeWarp = initialTimeWarp
+    console.log("initialTimeWarp " + initialTimeWarp)
 	if(parts > 1) {
 		$('#smp-channel-list').show();
 		$('#smp-channel-list').html('');
@@ -229,10 +245,12 @@ function MIDIPlayerReady() {
 	    });
     }
 	player.setAnimation(function(data, element) {
-		var now = data.now; // where we are now
-		var end = data.end; // end of song
-		var event = findEvent(events, (1000 * now) / player.timeWarp);
-		mpager.goTo(event.elid);
+		if (player && player.playing) {
+			var now = data.now; // where we are now
+			var end = data.end; // end of song
+			var event = findEvent(events, (1000 * now) / player.timeWarp);
+			mpager.goTo(event.elid);
+		}
 	});
 	MIDI.Player.addListener(function(data) { // set it to your own function!
 		var now = data.now; // where we are now
@@ -261,9 +279,12 @@ function seekToMeasureId(id) {
 	if(player){
 		var marker = eventsSorted[parseInt(id)];
 		if(marker) {
-			player.pause(true);
+			var playing = player.playing
+			if (playing)
+				player.pause(true);
 		    player.currentTime = marker * player.timeWarp;
-		    player.resume();
+		    if (playing)
+		    	player.resume();
 		}
 	}
 }
@@ -281,6 +302,7 @@ function isScrolledIntoView(elem) {
 function findEvent(evts, time) {
 	var l = evts.length;
 	if (l <= 1) {
+		console.log(evts[0].position + " - " + time)
 		return evts[0];
 	}
 	var i = Math.floor(l / 2);
@@ -290,6 +312,7 @@ function findEvent(evts, time) {
 	} else if (time > ev.position) {
 		return findEvent(evts.slice(i), time);
 	} else {
+	    console.log(ev.position)
 		return ev;
 	}
 }
