@@ -3,55 +3,43 @@ font-family: "Lucida Grande","Lucida Sans Unicode",Verdana,Arial,sans-serif;
 font-size: 11px;
 line-height: 1.5;
 color: #454545;
+margin: 0px;
 }
 
 #smp-control{
   position: fixed; 
-  bottom: 0px;
+  top: 0px;
+  height: 30px;
   background-color:#D1DAEF;
   border:1px dotted #F0EB9E;
-  width:1000px;
-}
-
-#smp-video{
-  position:fixed;
-  top:0px;
-  left:814px;
+  width:100%;
+  z-index:100;
 }
 
 #smp-pages {
-width: 650px;
-margin: -10px;
+width: 100%;
+margin: 0px;
+margin-top: 30px;
 }
 
-div.page {
-  position:relative;
-
-}
-img.pageimg{
+.mpager-page {
+  margin: 0px;
+  position: relative;
   border: 1px solid #F0EB9E;
-  margin:5px;  
 }
 
-div.measure{
-  position: absolute;
-  background-color: #FF0000;
-  /* for IE */
-  filter:alpha(opacity=0);
-  /* CSS3 standard */
-  opacity:0;
-  /*display:none;*/
-  margin:5px;
+.pageimg{
+  width: 100%;
+  z-index:1;
 }
 
-div.measure-visible{
-  position: absolute;
-  background-color: #FF0000;
-  /* for IE */
-  filter:alpha(opacity=20);
-  /* CSS3 standard */
-  opacity:0.20;
-  /*display:none;*/
+.pagecanvas {
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0px;
+  left:0px;
+  z-index:20;
 }
 
 #smp-control-replay {
